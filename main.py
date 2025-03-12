@@ -14,6 +14,7 @@ from WeatherAPI import WeatherAPI
 load_dotenv()
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
 N_DOUBLE_PENDULUMS = 10
+MOON_MODE = True
 
 
 def get_key_scale_mode_from_weather(
@@ -45,7 +46,9 @@ def initialize_pendulum_system(n: int, temperature: float) -> PendulumSystem:
             angular_velocity=0,
         )
         double_pendulum = DoublePendulum(
-            [pendulum_1, pendulum_2], temperature=temperature
+            [pendulum_1, pendulum_2],
+            temperature=temperature,
+            g=9.81 if not MOON_MODE else 1.62,
         )
         double_pendulums.append(double_pendulum)
 
@@ -54,7 +57,7 @@ def initialize_pendulum_system(n: int, temperature: float) -> PendulumSystem:
 
 if __name__ == "__main__":
 
-    weather_api = WeatherAPI(api_key=WEATHER_API_KEY, location="Helsinki")
+    weather_api = WeatherAPI(api_key=WEATHER_API_KEY, location="Barcelona")
     weather_api.fetch_current_weather_data()
 
     pendulum_system = initialize_pendulum_system(
@@ -81,8 +84,12 @@ if __name__ == "__main__":
         music_text = (
             f"Playing: {sonifier.key} {sonifier.scale} {sonifier.mode}"
         )
+        gravity_text = f"Gravity: {pendulum_system.double_pendulums[0].g} m/s²"
         visualizer.render_text(temperature_text, (10, 10))
         visualizer.render_text(music_text, (10, visualizer.height - 30))
+        visualizer.render_text(
+            gravity_text, (visualizer.width - 230, visualizer.height - 30)
+        )
 
         pendulum_system.step(0.01)
         """

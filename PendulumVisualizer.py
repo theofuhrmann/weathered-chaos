@@ -102,7 +102,7 @@ class PendulumSystemVisualizer:
 
     def render_text(self, text, position, color=(255, 255, 255)):
         """Render text on the screen at the given position."""
-        text_surface = self.font.render(text, True, color)
+        text_surface = self.font.render(text, False, color)
         self.screen.blit(text_surface, position)
 
     def update(self, pendulum_system: PendulumSystem):
