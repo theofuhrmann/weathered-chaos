@@ -3,7 +3,7 @@ import random
 
 import pygame
 
-from Pendulum import DoublePendulum, Pendulum, PendulumSystem
+from Pendulum import DoublePendulum, Node, Pendulum, PendulumSystem
 
 
 class PendulumSystemVisualizer:
@@ -20,6 +20,8 @@ class PendulumSystemVisualizer:
         pygame.init()
         self.screen = pygame.display.set_mode(screen_size)
         pygame.display.set_caption("Multi-Pendulum Simulation")
+        pygame.font.init()
+        self.font = pygame.font.SysFont("Courier New", 20)
 
         self.pendulum_system = pendulum_system
         self.num_pendulums = len(pendulum_system.double_pendulums)
@@ -52,23 +54,31 @@ class PendulumSystemVisualizer:
 
     def _update_node_states(self, double_pendulum: DoublePendulum):
         """
-        Updates each pendulum node.active state.
-        If the corresponding screen position is within 'node_threshold' of origin_x,
-        set active to True (only for the frame it crosses).
+        Updates the state of each node in the double pendulum.
         """
         origin_x, _ = self.origin
         coords = self._convert_to_screen_coords(double_pendulum)
         # Skip the fixed origin (index 0)
         for idx, (x, _) in enumerate(coords[1:]):
             p: Pendulum = double_pendulum.pendulums[idx]
-            # Set active if near the vertical center.
-            if abs(x - origin_x) < self.node_threshold:
-                # Only set True if it wasn't already active (to prevent repeat triggers)
-                if not p.node.active:
-                    p.node.active = True
-            else:
-                # Reset active flag if not near center.
-                p.node.active = False
+            node: Node = p.node
+
+            if node.last_x is not None:
+                previous_side = node.last_x < origin_x
+                current_side = x < origin_x
+
+                if previous_side != current_side:
+                    if not node.triggered:
+                        node.active = True
+                        node.triggered = True
+                else:
+                    node.active = False
+
+                # Reset lock if the node moves sufficiently away from the origin.
+                if abs(x - origin_x) > self.node_threshold * 2:
+                    node.triggered = False
+
+            node.last_x = x
 
     def _draw_double_pendulum(self, double_pendulum: DoublePendulum, color):
         """
@@ -89,6 +99,11 @@ class PendulumSystemVisualizer:
             self.colors, pendulum_system.double_pendulums
         ):
             self._draw_double_pendulum(double_pendulum, color)
+
+    def render_text(self, text, position, color=(255, 255, 255)):
+        """Render text on the screen at the given position."""
+        text_surface = self.font.render(text, True, color)
+        self.screen.blit(text_surface, position)
 
     def update(self, pendulum_system: PendulumSystem):
         """

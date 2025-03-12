@@ -1,0 +1,247 @@
+{
+    "Sunny": {
+        "key": "C",
+        "scale": "Major",
+        "mode": "Ionian"
+    },
+    "Clear": {
+        "key": "C",
+        "scale": "Major",
+        "mode": "Ionian"
+    },
+    "Partly cloudy": {
+        "key": "D",
+        "scale": "Major",
+        "mode": "Lydian"
+    },
+    "Cloudy": {
+        "key": "A",
+        "scale": "Minor",
+        "mode": "Dorian"
+    },
+    "Overcast": {
+        "key": "G",
+        "scale": "Minor",
+        "mode": "Aeolian"
+    },
+    "Mist": {
+        "key": "F#",
+        "scale": "Minor",
+        "mode": "Phrygian"
+    },
+    "Patchy rain possible": {
+        "key": "E",
+        "scale": "Minor",
+        "mode": "Dorian"
+    },
+    "Patchy snow possible": {
+        "key": "D",
+        "scale": "Minor",
+        "mode": "Aeolian"
+    },
+    "Patchy sleet possible": {
+        "key": "B",
+        "scale": "Minor",
+        "mode": "Phrygian"
+    },
+    "Patchy freezing drizzle possible": {
+        "key": "Bb",
+        "scale": "Minor",
+        "mode": "Phrygian"
+    },
+    "Thundery outbreaks possible": {
+        "key": "G",
+        "scale": "Minor",
+        "mode": "Locrian"
+    },
+    "Blowing snow": {
+        "key": "E",
+        "scale": "Minor",
+        "mode": "Harmonic Minor"
+    },
+    "Blizzard": {
+        "key": "D",
+        "scale": "Minor",
+        "mode": "Phrygian"
+    },
+    "Fog": {
+        "key": "Eb",
+        "scale": "Minor",
+        "mode": "Dorian"
+    },
+    "Freezing fog": {
+        "key": "Db",
+        "scale": "Minor",
+        "mode": "Locrian"
+    },
+    "Patchy light drizzle": {
+        "key": "A",
+        "scale": "Minor",
+        "mode": "Dorian"
+    },
+    "Light drizzle": {
+        "key": "F",
+        "scale": "Minor",
+        "mode": "Aeolian"
+    },
+    "Freezing drizzle": {
+        "key": "Eb",
+        "scale": "Minor",
+        "mode": "Harmonic Minor"
+    },
+    "Heavy freezing drizzle": {
+        "key": "C#",
+        "scale": "Minor",
+        "mode": "Phrygian"
+    },
+    "Patchy light rain": {
+        "key": "G",
+        "scale": "Minor",
+        "mode": "Dorian"
+    },
+    "Light rain": {
+        "key": "E",
+        "scale": "Minor",
+        "mode": "Aeolian"
+    },
+    "Moderate rain at times": {
+        "key": "D",
+        "scale": "Minor",
+        "mode": "Dorian"
+    },
+    "Moderate rain": {
+        "key": "B",
+        "scale": "Minor",
+        "mode": "Aeolian"
+    },
+    "Heavy rain at times": {
+        "key": "A",
+        "scale": "Minor",
+        "mode": "Harmonic Minor"
+    },
+    "Heavy rain": {
+        "key": "F#",
+        "scale": "Minor",
+        "mode": "Phrygian"
+    },
+    "Light freezing rain": {
+        "key": "G",
+        "scale": "Minor",
+        "mode": "Harmonic Minor"
+    },
+    "Moderate or heavy freezing rain": {
+        "key": "F",
+        "scale": "Minor",
+        "mode": "Locrian"
+    },
+    "Light sleet": {
+        "key": "Eb",
+        "scale": "Minor",
+        "mode": "Dorian"
+    },
+    "Moderate or heavy sleet": {
+        "key": "C",
+        "scale": "Minor",
+        "mode": "Aeolian"
+    },
+    "Patchy light snow": {
+        "key": "D",
+        "scale": "Minor",
+        "mode": "Aeolian"
+    },
+    "Light snow": {
+        "key": "E",
+        "scale": "Minor",
+        "mode": "Dorian"
+    },
+    "Patchy moderate snow": {
+        "key": "F#",
+        "scale": "Minor",
+        "mode": "Aeolian"
+    },
+    "Moderate snow": {
+        "key": "A",
+        "scale": "Minor",
+        "mode": "Phrygian"
+    },
+    "Patchy heavy snow": {
+        "key": "C#",
+        "scale": "Minor",
+        "mode": "Harmonic Minor"
+    },
+    "Heavy snow": {
+        "key": "B",
+        "scale": "Minor",
+        "mode": "Locrian"
+    },
+    "Ice pellets": {
+        "key": "D",
+        "scale": "Minor",
+        "mode": "Phrygian"
+    },
+    "Light rain shower": {
+        "key": "E",
+        "scale": "Minor",
+        "mode": "Dorian"
+    },
+    "Moderate or heavy rain shower": {
+        "key": "C",
+        "scale": "Minor",
+        "mode": "Aeolian"
+    },
+    "Torrential rain shower": {
+        "key": "B",
+        "scale": "Minor",
+        "mode": "Locrian"
+    },
+    "Light sleet showers": {
+        "key": "F",
+        "scale": "Minor",
+        "mode": "Harmonic Minor"
+    },
+    "Moderate or heavy sleet showers": {
+        "key": "G#",
+        "scale": "Minor",
+        "mode": "Phrygian"
+    },
+    "Light snow showers": {
+        "key": "D",
+        "scale": "Minor",
+        "mode": "Dorian"
+    },
+    "Moderate or heavy snow showers": {
+        "key": "F#",
+        "scale": "Minor",
+        "mode": "Aeolian"
+    },
+    "Light showers of ice pellets": {
+        "key": "A",
+        "scale": "Minor",
+        "mode": "Locrian"
+    },
+    "Moderate or heavy showers of ice pellets": {
+        "key": "C#",
+        "scale": "Minor",
+        "mode": "Phrygian"
+    },
+    "Patchy light rain with thunder": {
+        "key": "G",
+        "scale": "Minor",
+        "mode": "Locrian"
+    },
+    "Moderate or heavy rain with thunder": {
+        "key": "E",
+        "scale": "Minor",
+        "mode": "Phrygian"
+    },
+    "Patchy light snow with thunder": {
+        "key": "D",
+        "scale": "Minor",
+        "mode": "Harmonic Minor"
+    },
+    "Moderate or heavy snow with thunder": {
+        "key": "C",
+        "scale": "Minor",
+        "mode": "Locrian"
+    }
+}

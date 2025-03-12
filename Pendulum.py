@@ -2,8 +2,14 @@ import math
 
 
 class Node:
-    def __init__(self):
-        self.active = False
+    """
+    Represents a node in a pendulum system.
+    """
+
+    def __init__(self) -> None:
+        self.active: bool = False
+        self.triggered: bool = False
+        self.last_x: float = None
 
 
 class Pendulum:
@@ -32,14 +38,37 @@ class DoublePendulum:
 
     def __init__(
         self,
-        pendulums=list[Pendulum],
+        pendulums: list[Pendulum],
         g: float = 9.81,
+        temperature: float = None,
     ):
         if len(pendulums) != 2:
             raise ValueError("DoublePendulum must have exactly 2 pendulums.")
 
         self.pendulums = pendulums
         self.g = g
+
+        if temperature is not None:
+            self.temperature_factor = self.calculate_temperature_factor(
+                temperature
+            )
+        else:
+            self.temperature_factor = 1.0
+
+    def calculate_temperature_factor(
+        self, temperature_celsius: float
+    ) -> float:
+        """
+        Calculates the temperature factor based on the provided temperature in Celsius.
+        Factor ranges from 0.5 (cold) to 2.0 (hot).
+        """
+        if temperature_celsius <= 0:
+            return 0.5
+        elif temperature_celsius >= 35:
+            return 2.0
+        else:
+            # Linear interpolation between 0°C (0.5) and 35°C (2.0)
+            return 0.5 + (temperature_celsius / 35) * 1.5
 
     def step(self, dt) -> None:
         """
@@ -81,9 +110,15 @@ class DoublePendulum:
             )
         ) / denom2
 
+        # Apply temperature factor to the acceleration, not to the accumulated velocity
+        # This prevents continuous acceleration over time
+        d_w1 *= self.temperature_factor
+        d_w2 *= self.temperature_factor
+
         # Euler integration
         p1.angular_velocity += d_w1 * dt
         p2.angular_velocity += d_w2 * dt
+
         p1.angle += p1.angular_velocity * dt
         p2.angle += p2.angular_velocity * dt
 
