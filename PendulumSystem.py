@@ -1,4 +1,5 @@
 import math
+import random
 
 
 class Node:
@@ -38,14 +39,25 @@ class DoublePendulum:
 
     def __init__(
         self,
-        pendulums: list[Pendulum],
         g: float = 9.81,
         temperature: float = None,
+        mass_range: float = 0.0,
+        length_range: float = 0.0,
+        angle_range: tuple[float, float] = (-0.1, 0.1),
     ):
-        if len(pendulums) != 2:
-            raise ValueError("DoublePendulum must have exactly 2 pendulums.")
 
-        self.pendulums = pendulums
+        self.pendulums = [
+            Pendulum(
+                mass=random.uniform(1 - mass_range, 1 + mass_range),
+                length=random.uniform(1 - length_range, 1 + length_range),
+                angle=math.pi / 2 + random.uniform(*angle_range),
+            ),
+            Pendulum(
+                mass=random.uniform(1 - mass_range, 1 + mass_range),
+                length=random.uniform(1 - length_range, 1 + length_range),
+                angle=math.pi / 2 + random.uniform(*angle_range),
+            ),
+        ]
         self.g = g
 
         if temperature is not None:
@@ -128,16 +140,82 @@ class PendulumSystem:
     Represents a collection of double pendulum systems.
     """
 
-    def __init__(self, double_pendulums: list[DoublePendulum] = None):
-        self.double_pendulums = (
-            double_pendulums if double_pendulums is not None else []
-        )
-
-    def add_system(self, double_pendulums: DoublePendulum) -> None:
-        """Adds a new DoublePendulum to the collection."""
-        self.double_pendulums.append(double_pendulums)
+    def __init__(
+        self,
+        n: int = 1,
+        g: float = 9.81,
+        temperature: float = None,
+        mass_range: float = 0.0,
+        length_range: float = 0.0,
+        angle_range: tuple[float, float] = (-0.1, 0.1),
+    ):
+        self.double_pendulums = [
+            DoublePendulum(
+                g=g,
+                temperature=temperature,
+                mass_range=mass_range,
+                length_range=length_range,
+                angle_range=angle_range,
+            )
+            for _ in range(n)
+        ]
+        self.g = g
+        self.temperature = temperature
+        self.mass_range = mass_range
+        self.length_range = length_range
+        self.angle_range = angle_range
 
     def step(self, dt: float) -> None:
         """Advances each double pendulum system by dt."""
         for double_pendulum in self.double_pendulums:
             double_pendulum.step(dt)
+
+    def update_gravity(self, g: float) -> None:
+        """
+        Updates the gravity value for all double pendulum systems and scales angular velocity
+        to prevent excessive spinning when gravity changes.
+        """
+        # Scale factor for angular velocity
+        gravity_ratio = math.sqrt(g / self.g)
+
+        for double_pendulum in self.double_pendulums:
+            double_pendulum.g = g
+            for pendulum in double_pendulum.pendulums:
+                # Scale angular velocity
+                pendulum.angular_velocity *= gravity_ratio
+
+        self.g = g
+
+    def update_number_of_pendulums(self, n: int) -> None:
+        """Updates the number of double pendulum systems."""
+        if n < len(self.double_pendulums):
+            self.double_pendulums = self.double_pendulums[:n]
+        elif n > len(self.double_pendulums):
+            missing_pendulums = n - len(self.double_pendulums)
+            for _ in range(missing_pendulums):
+                double_pendulum = DoublePendulum(
+                    g=self.g,
+                    temperature=self.temperature,
+                    mass_range=self.mass_range,
+                    length_range=self.length_range,
+                    angle_range=self.angle_range,
+                )
+                self.double_pendulums.append(double_pendulum)
+
+    def update_mass_range(self, mass_range: float) -> None:
+        """Updates the mass range for all double pendulum systems."""
+        for double_pendulum in self.double_pendulums:
+            for pendulum in double_pendulum.pendulums:
+                pendulum.mass = random.uniform(1 - mass_range, 1 + mass_range)
+
+        self.mass_range = mass_range
+
+    def update_length_range(self, length_range: float) -> None:
+        """Updates the length range for all double pendulum systems."""
+        for double_pendulum in self.double_pendulums:
+            for pendulum in double_pendulum.pendulums:
+                pendulum.length = random.uniform(
+                    1 - length_range, 1 + length_range
+                )
+
+        self.length_range = length_range

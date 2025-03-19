@@ -1,32 +1,43 @@
+import json
 from enum import Enum
 
 import mido
 
-from Pendulum import Pendulum, PendulumSystem
+from Config import Config
+from EventManager import Event, EventType, event_manager
+from PendulumSystem import Pendulum, PendulumSystem
 
 
 class Scale(Enum):
-    MAJOR = "major"
-    MINOR = "minor"
+    MAJOR = "MAJOR"
+    MINOR = "MINOR"
 
 
 class Mode(Enum):
-    IONIAN = "Ionian"
-    DORIAN = "Dorian"
-    PHRYGIAN = "Phrygian"
-    LYDIAN = "Lydian"
-    MIXOLYDIAN = "Mixolydian"
-    AEOLIAN = "Aeolian"
-    LOCRIAN = "Locrian"
+    IONIAN = "IONIAN"
+    DORIAN = "DORIAN"
+    PHRYGIAN = "PHRYGIAN"
+    LYDIAN = "LYDIAN"
+    MIXOLYDIAN = "MIXOLYDIAN"
+    AEOLIAN = "AEOLIAN"
+    LOCRIAN = "LOCRIAN"
 
 
 class Key(Enum):
     C = "C"
+    C_SHARP = "C_SHARP"
+    D_FLAT = "D_FLAT"
     D = "D"
+    D_SHARP = "D_SHARP"
+    E_FLAT = "E_FLAT"
     E = "E"
     F = "F"
+    F_SHARP = "F_SHARP"
+    G_FLAT = "G_FLAT"
     G = "G"
+    A_FLAT = "A_FLAT"
     A = "A"
+    B_FLAT = "B_FLAT"
     B = "B"
 
 
@@ -116,11 +127,18 @@ class PendulumSonifier:
     # Predefined base MIDI note numbers for keys; here we use middle C=60 for key C.
     KEYS = {
         Key.C: 60,
+        Key.C_SHARP: 61,
+        Key.D_FLAT: 61,
         Key.D: 62,
+        Key.E_FLAT: 63,
         Key.E: 64,
         Key.F: 65,
+        Key.F_SHARP: 66,
+        Key.G_FLAT: 66,
         Key.G: 67,
+        Key.A_FLAT: 68,
         Key.A: 69,
+        Key.B_FLAT: 70,
         Key.B: 71,
     }
 
@@ -139,6 +157,11 @@ class PendulumSonifier:
         self.key: Key = key
         self.scale: Scale = scale
         self.mode: Mode = mode
+
+        Config.key = key.value
+        Config.scale = scale.value
+        Config.mode = mode.value
+
         self.scale_factor: int = scale_factor
 
         self.midi_out = mido.open_output(midi_port_name)
@@ -146,7 +169,7 @@ class PendulumSonifier:
         self.prev_state: dict = {}
 
         # Compute allowed MIDI note numbers from the given key and scale.
-        base_key: int = self.KEYS[Key[self.key]]
+        base_key: int = self.KEYS[self.key]
         # Get the intervals for the selected scale and mode
         selected_intervals = self.INTERVALS.get(
             (self.scale, self.mode), self.INTERVALS[(Scale.MAJOR, Mode.IONIAN)]
@@ -167,6 +190,32 @@ class PendulumSonifier:
         # For the first node we want reverse order.
         self.lower_notes_reversed = list(reversed(self.lower_notes))
 
+        self._register_event_handlers()
+
+    def _register_event_handlers(self):
+        event_manager.subscribe(
+            EventType.WEATHER_UPDATED, self._on_weather_changed
+        )
+
+    def _on_weather_changed(self, event: Event):
+        self.set_key_scale_mode_from_weather(event.data["condition"])
+        Config.key = self.key.value
+        Config.scale = self.scale.value
+        Config.mode = self.mode.value
+        event_manager.publish(Event(EventType.MUSIC_SETTINGS_CHANGED))
+
+    def set_key_scale_mode_from_weather(
+        self,
+        weather_condition: str,
+    ):
+        with open("weather_music_mapping.json") as f:
+            weather_music_mapping = json.load(f)
+            self.key = Key[weather_music_mapping[weather_condition]["key"]]
+            self.scale = Scale[
+                weather_music_mapping[weather_condition]["scale"]
+            ]
+            self.mode = Mode[weather_music_mapping[weather_condition]["mode"]]
+
     def update(self, system: PendulumSystem) -> None:
         """
         For each double pendulum in the system, if any pendulum's node is active,
@@ -185,8 +234,11 @@ class PendulumSonifier:
                     pitch: int = allowed[assign_idx]
 
                     ang_vel: float = abs(pendulum.angular_velocity)
+
+                    gravity_scaling = 9.81 / double_pendulum.g
+                    scaled_ang_vel = ang_vel * gravity_scaling
                     # Map angular velocity to a MIDI velocity in a chosen range (30–127)
-                    velocity: int = min(127, max(30, int(ang_vel * 20)))
+                    velocity: int = min(127, max(30, int(scaled_ang_vel * 20)))
                     self.play_note_on(node_idx, pitch, velocity)
                 else:
                     prev_state = self.prev_state.get(
@@ -204,4 +256,6 @@ class PendulumSonifier:
 
     def play_note_off(self, channel: int, pitch: int) -> None:
         note_off = mido.Message("note_off", channel=channel, note=pitch)
+        self.midi_out.send(note_off)
+        self.midi_out.send(note_off)
         self.midi_out.send(note_off)
