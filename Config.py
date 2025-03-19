@@ -4,8 +4,8 @@ class Config:
     mass_range = 0
     length_range = 0
     location = "Barcelona"
-    temperature = None
-    weather_condition = None
+    temperature = 15
+    weather_condition = "Clear"
     rave_volume = 0.5
     key = "C"
     scale = "major"
