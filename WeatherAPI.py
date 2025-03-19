@@ -1,6 +1,7 @@
-from typing import Tuple
-
 import requests
+
+from Config import Config
+from EventManager import Event, EventType, event_manager
 
 
 class WeatherAPI:
@@ -18,6 +19,17 @@ class WeatherAPI:
         self.temperature = None
         self.weather_condition = None
 
+        self._register_event_handlers()
+
+    def _register_event_handlers(self):
+        event_manager.subscribe(
+            EventType.LOCATION_CHANGED, self._on_location_changed
+        )
+
+    def _on_location_changed(self, event: Event):
+        self.location = Config.location
+        self.fetch_current_weather_data()
+
     def fetch_current_weather_data(self) -> dict:
         """Fetch current weather data from API"""
         params = {
@@ -32,45 +44,26 @@ class WeatherAPI:
             data = response.json()
             self.temperature = data["current"]["temp_c"]
             self.weather_condition = data["current"]["condition"]["text"]
+
+            Config.weather_condition = self.weather_condition
+            Config.temperature = self.temperature
+
+            event_manager.publish(
+                Event(
+                    EventType.WEATHER_UPDATED,
+                    {
+                        "condition": self.weather_condition,
+                        "temperature": self.temperature,
+                    },
+                )
+            )
+
             return data
+
         except requests.exceptions.RequestException as e:
             print(f"Error fetching weather data: {e}")
             # Return default values if API call fails
             self.temperature = 20  # Default to room temperature
             self.weather_condition = "Clear"
+
             return {}
-
-    def get_background_color(self) -> Tuple[int, int, int]:
-        """
-        Map temperature to background color.
-
-        Returns:
-            RGB color tuple (warmer for higher temps, cooler for lower temps)
-        """
-        if self.temperature is None:
-            self.fetch_current_weather_data()
-
-        # Map temperature range to color
-        # Cold: blueish (0, 0, 255) to warm: reddish (255, 0, 0)
-        if self.temperature <= 0:
-            return (0, 0, 180)  # Cold blue
-        elif 0 < self.temperature <= 10:
-            return (0, 0, 255 - int(self.temperature * 5))  # Blue to cyan
-        elif 10 < self.temperature <= 20:
-            return (
-                0,
-                int((self.temperature - 10) * 20),
-                200 - int((self.temperature - 10) * 20),
-            )  # Cyan to green
-        elif 20 < self.temperature <= 30:
-            return (
-                int((self.temperature - 20) * 20),
-                200 - int((self.temperature - 20) * 10),
-                0,
-            )  # Green to yellow/orange
-        else:
-            return (
-                200 + min(55, int((self.temperature - 30) * 5)),
-                50,
-                0,
-            )  # Orange to red
