@@ -1,108 +1,74 @@
-import json
-import math
 import os
-import random
+import threading
 
 import pygame
 from dotenv import load_dotenv
 
-from Pendulum import DoublePendulum, Pendulum, PendulumSystem
-from PendulumSonifier import Key, Mode, PendulumSonifier, Scale
-from PendulumVisualizer import PendulumSystemVisualizer
+from Config import Config
+from PendulumSystem import PendulumSystem
+from RAVESonifier import RAVESonifier
+from Sonifier import PendulumSonifier
+from Visualizer import PendulumSystemVisualizer
 from WeatherAPI import WeatherAPI
 
 load_dotenv()
 WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
-N_DOUBLE_PENDULUMS = 10
-MOON_MODE = True
-
-
-def get_key_scale_mode_from_weather(
-    weather_condition: str,
-) -> tuple[Key, Scale, Mode]:
-    with open("weather_music_mapping.json") as f:
-        weather_music_mapping = json.load(f)
-        key = weather_music_mapping[weather_condition]["key"]
-        scale = weather_music_mapping[weather_condition]["scale"]
-        mode = weather_music_mapping[weather_condition]["mode"]
-
-    return key, scale, mode
-
-
-def initialize_pendulum_system(n: int, temperature: float) -> PendulumSystem:
-    double_pendulums = []
-
-    for _ in range(n):
-        pendulum_1 = Pendulum(
-            mass=1,
-            length=1,
-            angle=math.pi / 2 + random.uniform(-0.1, 0.1),
-            angular_velocity=0,
-        )
-        pendulum_2 = Pendulum(
-            mass=1,
-            length=1,
-            angle=math.pi / 2 + random.uniform(-0.1, 0.1),
-            angular_velocity=0,
-        )
-        double_pendulum = DoublePendulum(
-            [pendulum_1, pendulum_2],
-            temperature=temperature,
-            g=9.81 if not MOON_MODE else 1.62,
-        )
-        double_pendulums.append(double_pendulum)
-
-    return PendulumSystem(double_pendulums)
 
 
 if __name__ == "__main__":
-
-    weather_api = WeatherAPI(api_key=WEATHER_API_KEY, location="Barcelona")
+    weather_api = WeatherAPI(api_key=WEATHER_API_KEY, location=Config.location)
     weather_api.fetch_current_weather_data()
 
-    pendulum_system = initialize_pendulum_system(
-        N_DOUBLE_PENDULUMS, weather_api.temperature
+    pendulum_system = PendulumSystem(
+        Config.num_double_pendulums,
+        temperature=Config.temperature,
+        g=(1.62 if Config.moon_mode else 9.81),
+        mass_range=Config.mass_range,
+        length_range=Config.length_range,
     )
 
-    visualizer = PendulumSystemVisualizer(pendulum_system)
-    key, scale, mode = get_key_scale_mode_from_weather(
-        weather_api.weather_condition
-    )
+    visualizer = PendulumSystemVisualizer(pendulum_system, size=(800, 800))
+
     sonifier = PendulumSonifier(
-        scale=scale, key=key, mode=mode, scale_factor=visualizer.scale
+        scale_factor=visualizer.scale,
     )
 
-    background_color = weather_api.get_background_color()
+    rave_sonifier = RAVESonifier(
+        pendulum_system=pendulum_system,
+        sample_rate=48000,
+        buffer_size=512,
+        scaling_factor=(visualizer.height + 50) / 2,
+    )
+
     running = True
+    audio_thread = threading.Thread(target=rave_sonifier.stream_audio)
+    audio_thread.start()
+
+    visualizer.update_music_text()
+    visualizer.update_location_weather_text()
+    visualizer.update_gravity_text()
+
     while running:
-        visualizer.screen.fill(background_color)
+        time_delta = visualizer.clock.tick(60) / 1000.0
+        visualizer.fill_background()
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
 
-        temperature_text = f"{weather_api.location}: {weather_api.weather_condition}, {weather_api.temperature}°C"
-        music_text = (
-            f"Playing: {sonifier.key} {sonifier.scale} {sonifier.mode}"
-        )
-        gravity_text = f"Gravity: {pendulum_system.double_pendulums[0].g} m/s²"
-        visualizer.render_text(temperature_text, (10, 10))
-        visualizer.render_text(music_text, (10, visualizer.height - 30))
-        visualizer.render_text(
-            gravity_text, (visualizer.width - 230, visualizer.height - 30)
-        )
+            visualizer.handle_event(event)
 
         pendulum_system.step(0.01)
-        """
-        for color, double_pendulum in zip(
-            visualizer.colors, pendulum_system.double_pendulums
-        ):
-            visualizer._draw_double_pendulum(double_pendulum, color)
-            visualizer._update_node_states(double_pendulum)
-        """
-        visualizer.draw(pendulum_system)
-        visualizer.update(pendulum_system)
+
+        visualizer.update(pendulum_system, time_delta)
         sonifier.update(pendulum_system.double_pendulums)
+
+        visualizer.draw(pendulum_system)
 
         pygame.display.flip()
         visualizer.clock.tick(60)
+
+    rave_sonifier.stop_audio()
+    audio_thread.join()
+
     pygame.quit()
