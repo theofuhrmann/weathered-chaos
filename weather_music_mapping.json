@@ -1,247 +1,260 @@
 {
     "Sunny": {
         "key": "C",
-        "scale": "Major",
-        "mode": "Ionian"
+        "scale": "MAJOR",
+        "mode": "IONIAN",
+        "weights": "rave_model_weights/dawn_birds.ts"
     },
     "Clear": {
         "key": "C",
-        "scale": "Major",
-        "mode": "Ionian"
+        "scale": "MAJOR",
+        "mode": "IONIAN",
+        "weights": "rave_model_weights/dawn_birds.ts"
     },
     "Partly cloudy": {
         "key": "D",
-        "scale": "Major",
-        "mode": "Lydian"
+        "scale": "MAJOR",
+        "mode": "LYDIAN",
+        "weights": "rave_model_weights/dawn_birds.ts"
     },
     "Cloudy": {
         "key": "A",
-        "scale": "Minor",
-        "mode": "Dorian"
+        "scale": "MINOR",
+        "mode": "DORIAN",
+        "weights": "rave_model_weights/dawn_birds.ts"
     },
     "Overcast": {
         "key": "G",
-        "scale": "Minor",
-        "mode": "Aeolian"
+        "scale": "MINOR",
+        "mode": "AEOLIAN",
+        "weights": "rave_model_weights/dawn_birds.ts"
     },
     "Mist": {
-        "key": "F#",
-        "scale": "Minor",
-        "mode": "Phrygian"
+        "key": "F_SHARP",
+        "scale": "MINOR",
+        "mode": "PHRYGIAN",
+        "weights": "rave_model_weights/dawn_birds.ts"
     },
     "Patchy rain possible": {
         "key": "E",
-        "scale": "Minor",
-        "mode": "Dorian"
+        "scale": "MINOR",
+        "mode": "DORIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Patchy snow possible": {
         "key": "D",
-        "scale": "Minor",
-        "mode": "Aeolian"
+        "scale": "MINOR",
+        "mode": "AEOLIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Patchy sleet possible": {
         "key": "B",
-        "scale": "Minor",
-        "mode": "Phrygian"
+        "scale": "MINOR",
+        "mode": "PHRYGIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Patchy freezing drizzle possible": {
-        "key": "Bb",
-        "scale": "Minor",
-        "mode": "Phrygian"
+        "key": "B_FLAT",
+        "scale": "MINOR",
+        "mode": "PHRYGIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Thundery outbreaks possible": {
         "key": "G",
-        "scale": "Minor",
-        "mode": "Locrian"
+        "scale": "MINOR",
+        "mode": "LOCRIAN",
+        "weights": "rave_model_weights/percussion.ts"
     },
     "Blowing snow": {
         "key": "E",
-        "scale": "Minor",
-        "mode": "Harmonic Minor"
+        "scale": "MINOR",
+        "mode": "IONIAN",
+        "weights": "rave_model_weights/percussion.ts"
     },
     "Blizzard": {
         "key": "D",
-        "scale": "Minor",
-        "mode": "Phrygian"
+        "scale": "MINOR",
+        "mode": "PHRYGIAN",
+        "weights": "rave_model_weights/percussion.ts"
     },
     "Fog": {
-        "key": "Eb",
-        "scale": "Minor",
-        "mode": "Dorian"
+        "key": "E_FLAT",
+        "scale": "MINOR",
+        "mode": "DORIAN",
+        "weights": "rave_model_weights/dawn_birds.ts"
     },
     "Freezing fog": {
-        "key": "Db",
-        "scale": "Minor",
-        "mode": "Locrian"
+        "key": "D_FLAT",
+        "scale": "MINOR",
+        "mode": "LOCRIAN",
+        "weights": "rave_model_weights/dawn_birds.ts"
     },
     "Patchy light drizzle": {
         "key": "A",
-        "scale": "Minor",
-        "mode": "Dorian"
+        "scale": "MINOR",
+        "mode": "DORIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Light drizzle": {
         "key": "F",
-        "scale": "Minor",
-        "mode": "Aeolian"
+        "scale": "MINOR",
+        "mode": "AEOLIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Freezing drizzle": {
-        "key": "Eb",
-        "scale": "Minor",
-        "mode": "Harmonic Minor"
+        "key": "E_FLAT",
+        "scale": "MINOR",
+        "mode": "IONIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Heavy freezing drizzle": {
-        "key": "C#",
-        "scale": "Minor",
-        "mode": "Phrygian"
+        "key": "C_SHARP",
+        "scale": "MINOR",
+        "mode": "PHRYGIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Patchy light rain": {
         "key": "G",
-        "scale": "Minor",
-        "mode": "Dorian"
+        "scale": "MINOR",
+        "mode": "DORIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Light rain": {
         "key": "E",
-        "scale": "Minor",
-        "mode": "Aeolian"
+        "scale": "MINOR",
+        "mode": "AEOLIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Moderate rain at times": {
         "key": "D",
-        "scale": "Minor",
-        "mode": "Dorian"
+        "scale": "MINOR",
+        "mode": "DORIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Moderate rain": {
         "key": "B",
-        "scale": "Minor",
-        "mode": "Aeolian"
+        "scale": "MINOR",
+        "mode": "AEOLIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Heavy rain at times": {
         "key": "A",
-        "scale": "Minor",
-        "mode": "Harmonic Minor"
+        "scale": "MINOR",
+        "mode": "IONIAN",
+        "weights": "rave_model_weights/percussion.ts"
     },
     "Heavy rain": {
-        "key": "F#",
-        "scale": "Minor",
-        "mode": "Phrygian"
+        "key": "F_SHARP",
+        "scale": "MINOR",
+        "mode": "PHRYGIAN",
+        "weights": "rave_model_weights/percussion.ts"
     },
     "Light freezing rain": {
         "key": "G",
-        "scale": "Minor",
-        "mode": "Harmonic Minor"
+        "scale": "MINOR",
+        "mode": "IONIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Moderate or heavy freezing rain": {
         "key": "F",
-        "scale": "Minor",
-        "mode": "Locrian"
+        "scale": "MINOR",
+        "mode": "LOCRIAN",
+        "weights": "rave_model_weights/percussion.ts"
     },
     "Light sleet": {
-        "key": "Eb",
-        "scale": "Minor",
-        "mode": "Dorian"
+        "key": "E_FLAT",
+        "scale": "MINOR",
+        "mode": "DORIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Moderate or heavy sleet": {
         "key": "C",
-        "scale": "Minor",
-        "mode": "Aeolian"
+        "scale": "MINOR",
+        "mode": "AEOLIAN",
+        "weights": "rave_model_weights/percussion.ts"
     },
     "Patchy light snow": {
         "key": "D",
-        "scale": "Minor",
-        "mode": "Aeolian"
+        "scale": "MINOR",
+        "mode": "AEOLIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Light snow": {
         "key": "E",
-        "scale": "Minor",
-        "mode": "Dorian"
+        "scale": "MINOR",
+        "mode": "DORIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Patchy moderate snow": {
-        "key": "F#",
-        "scale": "Minor",
-        "mode": "Aeolian"
+        "key": "F_SHARP",
+        "scale": "MINOR",
+        "mode": "AEOLIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Moderate snow": {
         "key": "A",
-        "scale": "Minor",
-        "mode": "Phrygian"
+        "scale": "MINOR",
+        "mode": "PHRYGIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Patchy heavy snow": {
-        "key": "C#",
-        "scale": "Minor",
-        "mode": "Harmonic Minor"
+        "key": "C_SHARP",
+        "scale": "MINOR",
+        "mode": "IONIAN",
+        "weights": "rave_model_weights/percussion.ts"
     },
     "Heavy snow": {
         "key": "B",
-        "scale": "Minor",
-        "mode": "Locrian"
+        "scale": "MINOR",
+        "mode": "LOCRIAN",
+        "weights": "rave_model_weights/percussion.ts"
     },
     "Ice pellets": {
         "key": "D",
-        "scale": "Minor",
-        "mode": "Phrygian"
+        "scale": "MINOR",
+        "mode": "PHRYGIAN",
+        "weights": "rave_model_weights/percussion.ts"
     },
     "Light rain shower": {
         "key": "E",
-        "scale": "Minor",
-        "mode": "Dorian"
+        "scale": "MINOR",
+        "mode": "DORIAN",
+        "weights": "rave_model_weights/water.ts"
     },
     "Moderate or heavy rain shower": {
         "key": "C",
-        "scale": "Minor",
-        "mode": "Aeolian"
+        "scale": "MINOR",
+        "mode": "AEOLIAN",
+        "weights": "rave_model_weights/percussion.ts"
     },
     "Torrential rain shower": {
         "key": "B",
-        "scale": "Minor",
-        "mode": "Locrian"
-    },
-    "Light sleet showers": {
-        "key": "F",
-        "scale": "Minor",
-        "mode": "Harmonic Minor"
-    },
-    "Moderate or heavy sleet showers": {
-        "key": "G#",
-        "scale": "Minor",
-        "mode": "Phrygian"
-    },
-    "Light snow showers": {
-        "key": "D",
-        "scale": "Minor",
-        "mode": "Dorian"
-    },
-    "Moderate or heavy snow showers": {
-        "key": "F#",
-        "scale": "Minor",
-        "mode": "Aeolian"
-    },
-    "Light showers of ice pellets": {
-        "key": "A",
-        "scale": "Minor",
-        "mode": "Locrian"
-    },
-    "Moderate or heavy showers of ice pellets": {
-        "key": "C#",
-        "scale": "Minor",
-        "mode": "Phrygian"
+        "scale": "MINOR",
+        "mode": "LOCRIAN",
+        "weights": "rave_model_weights/percussion.ts"
     },
     "Patchy light rain with thunder": {
         "key": "G",
-        "scale": "Minor",
-        "mode": "Locrian"
+        "scale": "MINOR",
+        "mode": "LOCRIAN",
+        "weights": "rave_model_weights/percussion.ts"
     },
     "Moderate or heavy rain with thunder": {
         "key": "E",
-        "scale": "Minor",
-        "mode": "Phrygian"
+        "scale": "MINOR",
+        "mode": "PHRYGIAN",
+        "weights": "rave_model_weights/percussion.ts"
     },
     "Patchy light snow with thunder": {
         "key": "D",
-        "scale": "Minor",
-        "mode": "Harmonic Minor"
+        "scale": "MINOR",
+        "mode": "IONIAN",
+        "weights": "rave_model_weights/percussion.ts"
     },
     "Moderate or heavy snow with thunder": {
         "key": "C",
-        "scale": "Minor",
-        "mode": "Locrian"
+        "scale": "MINOR",
+        "mode": "LOCRIAN",
+        "weights": "rave_model_weights/percussion.ts"
     }
 }
