@@ -25,6 +25,15 @@ class Pendulum:
         angle: float = math.pi / 2,
         angular_velocity: float = 0.0,
     ):
+        """
+        Initializes a pendulum.
+
+        Args:
+            length: The length of the pendulum.
+            mass: The mass of the pendulum.
+            angle: The angle of the pendulum.
+            angular_velocity: The angular velocity of the pendulum.
+        """
         self.length = length
         self.mass = mass
         self.angle = angle
@@ -45,7 +54,16 @@ class DoublePendulum:
         length_range: float = 0.0,
         angle_range: tuple[float, float] = (-0.1, 0.1),
     ):
+        """
+        Initializes a double pendulum system.
 
+        Args:
+            g: The acceleration due to gravity.
+            temperature: The temperature in Celsius.
+            mass_range: The range of mass variation around 1.0.
+            length_range: The range of length variation around 1.0.
+            angle_range: The range of angle variation.
+        """
         self.pendulums = [
             Pendulum(
                 mass=random.uniform(1 - mass_range, 1 + mass_range),
@@ -137,7 +155,7 @@ class DoublePendulum:
 
 class PendulumSystem:
     """
-    Represents a collection of double pendulum systems.
+    Represents a collection of double pendulums.
     """
 
     def __init__(
@@ -149,6 +167,17 @@ class PendulumSystem:
         length_range: float = 0.0,
         angle_range: tuple[float, float] = (-0.1, 0.1),
     ):
+        """
+        Initializes a collection of double pendulums.
+
+        Args:
+            n: The number of double pendulums.
+            g: The acceleration due to gravity.
+            temperature: The temperature in Celsius.
+            mass_range: The range of mass variation around 1.0.
+            length_range: The range of length variation around 1.0.
+            angle_range: The range of angle variation.
+        """
         self.double_pendulums = [
             DoublePendulum(
                 g=g,
@@ -166,14 +195,17 @@ class PendulumSystem:
         self.angle_range = angle_range
 
     def step(self, dt: float) -> None:
-        """Advances each double pendulum system by dt."""
+        """
+        Advances each double pendulum system by dt.
+        """
         for double_pendulum in self.double_pendulums:
             double_pendulum.step(dt)
 
     def update_gravity(self, g: float) -> None:
         """
-        Updates the gravity value for all double pendulum systems and scales angular velocity
-        to prevent excessive spinning when gravity changes.
+        Updates the gravity value for all of the double pendulums in the system
+        and scales angular velocity to prevent excessive spinning when gravity
+        changes.
         """
         # Scale factor for angular velocity
         gravity_ratio = math.sqrt(g / self.g)
@@ -187,7 +219,9 @@ class PendulumSystem:
         self.g = g
 
     def update_number_of_pendulums(self, n: int) -> None:
-        """Updates the number of double pendulum systems."""
+        """
+        Updates the number of double pendulum systems.
+        """
         if n < len(self.double_pendulums):
             self.double_pendulums = self.double_pendulums[:n]
         elif n > len(self.double_pendulums):
@@ -203,7 +237,9 @@ class PendulumSystem:
                 self.double_pendulums.append(double_pendulum)
 
     def update_mass_range(self, mass_range: float) -> None:
-        """Updates the mass range for all double pendulum systems."""
+        """
+        Updates the mass range for all of the double pendulums in the system.
+        """
         for double_pendulum in self.double_pendulums:
             for pendulum in double_pendulum.pendulums:
                 pendulum.mass = random.uniform(1 - mass_range, 1 + mass_range)
@@ -211,7 +247,9 @@ class PendulumSystem:
         self.mass_range = mass_range
 
     def update_length_range(self, length_range: float) -> None:
-        """Updates the length range for all double pendulum systems."""
+        """
+        Updates the length range for all of the double pendulums in the system.
+        """
         for double_pendulum in self.double_pendulums:
             for pendulum in double_pendulum.pendulums:
                 pendulum.length = random.uniform(

@@ -6,7 +6,22 @@ from EventManager import Event, EventType, event_manager
 
 
 class Sidebar:
+    """
+    Contains UI elements for configuring the simulation. Allows users to adjust
+    the number of double pendulums, pendulum length range, mass range, and
+    weather location.
+    """
+
     def __init__(self, x: int, y: int, width: int, height: int):
+        """
+        Initializes the sidebar with the given position, width, and height.
+
+        Args:
+            x: The x-coordinate of the top-left corner.
+            y: The y-coordinate of the top-left corner.
+            width: The width of the sidebar.
+            height: The height of the sidebar.
+        """
         self.width = width
         self.height = height
         self.manager = pygame_gui.UIManager((self.width, self.height))
@@ -29,21 +44,18 @@ class Sidebar:
         self.rect = pygame.Rect(x, y, self.width, self.height)
         self.font = pygame.font.SysFont("Courier New", 16)
 
-        # Create a checkbox for Moon Mode.
         self.moon_checkbox = pygame_gui.elements.UIButton(
             relative_rect=pygame.Rect((20, 20), (self.width - 40, 30)),
             text="Moon Mode: OFF",
             manager=self.manager,
         )
 
-        # Create a text entry for weather location.
         self.location_entry = pygame_gui.elements.UITextEntryLine(
             relative_rect=pygame.Rect((20, 70), (self.width - 40, 30)),
             initial_text=Config.location,
             manager=self.manager,
         )
 
-        # Create a horizontal slider for the number of double pendulums (1 to 50)
         self.n_double_pendulums = pygame_gui.elements.UIHorizontalSlider(
             relative_rect=pygame.Rect((20, 120), (self.width - 40, 30)),
             start_value=Config.num_double_pendulums,
@@ -51,7 +63,6 @@ class Sidebar:
             manager=self.manager,
         )
 
-        # Create a horizontal slider for pendulum length range (0.5 - 2.0)
         self.length_slider = pygame_gui.elements.UIHorizontalSlider(
             relative_rect=pygame.Rect((20, 170), (self.width - 40, 30)),
             start_value=Config.length_range,
@@ -60,7 +71,6 @@ class Sidebar:
             manager=self.manager,
         )
 
-        # Create a horizontal slider for mass range (0.5 - 2.0)
         self.mass_slider = pygame_gui.elements.UIHorizontalSlider(
             relative_rect=pygame.Rect((20, 220), (self.width - 40, 30)),
             start_value=Config.mass_range,
@@ -69,15 +79,18 @@ class Sidebar:
             manager=self.manager,
         )
 
-    def process_event(self, event):
+    def process_event(self, event: pygame.event.Event):
+        """
+        Processes the given event. Update the config settings based on the
+        user's input.
+        """
         self.manager.process_events(event)
 
         if event.type == pygame_gui.UI_BUTTON_PRESSED:
             if event.ui_element == self.moon_checkbox:
-                if "OFF" in self.moon_checkbox.text:
-                    self.moon_checkbox.set_text("Moon Mode: ON")
-                else:
-                    self.moon_checkbox.set_text("Moon Mode: OFF")
+                self.moon_checkbox.set_text(
+                    f"Moon Mode: {'OFF' if self.moon_mode else 'ON'}"
+                )
 
                 Config.moon_mode = self.moon_mode
                 event_manager.publish(
@@ -117,9 +130,15 @@ class Sidebar:
                 )
 
     def update(self, time_delta: float):
+        """
+        Updates the UI manager.
+        """
         self.manager.update(time_delta)
 
-    def draw(self, surface, color):
+    def draw(self, surface: pygame.Surface, color: tuple[int, int, int]):
+        """
+        Draws the sidebar on the given surface.
+        """
         pygame.draw.rect(
             surface,
             tuple([min(255, c + 50) for c in color]),
@@ -128,7 +147,10 @@ class Sidebar:
         self.manager.draw_ui(surface)
         self.render_slider_values(surface)
 
-    def render_slider_values(self, surface):
+    def render_slider_values(self, surface: pygame.Surface) -> None:
+        """
+        Renders the current values of the sliders on the given surface.
+        """
         location_text = "Location:"
         num_pendulums_text = f"Double Pendulums: {self.num_double_pendulums}"
         length_text = f"Length Range: {self.length_range:.2f}"
@@ -148,7 +170,6 @@ class Sidebar:
         surface.blit(length_surface, (20, 150))
         surface.blit(mass_surface, (20, 200))
 
-    # Convenient getters
     @property
     def moon_mode(self) -> bool:
         return "ON" in self.moon_checkbox.text

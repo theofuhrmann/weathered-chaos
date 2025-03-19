@@ -3,7 +3,9 @@ from typing import Any, Callable
 
 
 class EventType(Enum):
-    """Event types that can be published in the system"""
+    """
+    Event types that can be published in the system
+    """
 
     LOCATION_CHANGED = auto()
     WEATHER_UPDATED = auto()
@@ -18,7 +20,9 @@ class EventType(Enum):
 
 
 class Event:
-    """Event class containing the event type and data"""
+    """
+    Event class containing the event type and data
+    """
 
     def __init__(self, event_type: EventType, data: Any = None):
         self.type = event_type
@@ -45,10 +49,6 @@ class EventManager:
     ) -> None:
         """
         Subscribe to an event type with a callback function
-
-        Args:
-            event_type: The type of event to subscribe to
-            callback: Function to call when the event occurs
         """
         self._subscribers[event_type].add(callback)
 
@@ -57,10 +57,6 @@ class EventManager:
     ) -> None:
         """
         Unsubscribe from an event type
-
-        Args:
-            event_type: The type of event to unsubscribe from
-            callback: Function to remove from subscribers
         """
         if callback in self._subscribers[event_type]:
             self._subscribers[event_type].remove(callback)
@@ -68,9 +64,6 @@ class EventManager:
     def publish(self, event: Event) -> None:
         """
         Publish an event to all subscribers
-
-        Args:
-            event: The event to publish
         """
         for callback in self._subscribers[event.type]:
             callback(event)

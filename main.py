@@ -16,9 +16,11 @@ WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
 
 
 if __name__ == "__main__":
+    # Fetch weather data
     weather_api = WeatherAPI(api_key=WEATHER_API_KEY, location=Config.location)
     weather_api.fetch_current_weather_data()
 
+    # Initialize pendulum system, visualizer, and sonifiers
     pendulum_system = PendulumSystem(
         Config.num_double_pendulums,
         temperature=Config.temperature,
@@ -40,14 +42,16 @@ if __name__ == "__main__":
         scaling_factor=(visualizer.height + 50) / 2,
     )
 
-    running = True
+    # Start audio thread
     audio_thread = threading.Thread(target=rave_sonifier.stream_audio)
     audio_thread.start()
 
+    # Update visualizer texts
     visualizer.update_music_text()
     visualizer.update_location_weather_text()
     visualizer.update_gravity_text()
 
+    running = True
     while running:
         time_delta = visualizer.clock.tick(60) / 1000.0
         visualizer.fill_background()

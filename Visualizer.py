@@ -20,6 +20,15 @@ class PendulumSystemVisualizer:
         size=(800, 800),
         scale=150,
     ):
+        """
+        Initializes the visualizer with the given pendulum system, screen size,
+        and scale.
+
+        Args:
+            pendulum_system: The pendulum system to visualize.
+            size: The size of the visualizer.
+            scale: The scale of the pendulum system.
+        """
         pygame.init()
         self.sidebar_width = 250
         self.size = size[0] + self.sidebar_width, size[1]
@@ -186,6 +195,10 @@ class PendulumSystemVisualizer:
             )
 
     def update_location_weather_text(self):
+        """
+        Updates the location and weather text to display the current location
+        and weather condition.
+        """
         if Config.moon_mode:
             self.location_weather_text = "Moon"
         else:
@@ -199,7 +212,6 @@ class PendulumSystemVisualizer:
     def update_music_text(self):
         """
         Updates the music text to display the current key, scale, and mode.
-        Converts keys ending in _SHARP or _FLAT to their respective symbols (# or b).
         """
         key = Config.key
         if key.endswith("_SHARP"):
@@ -210,11 +222,16 @@ class PendulumSystemVisualizer:
         self.music_text = f"Playing: {key} {Config.scale.capitalize()} {Config.mode.capitalize()}"
 
     def render_text(self, text, position, color=(255, 255, 255)):
-        """Render text on the screen at the given position."""
+        """
+        Renders text on the screen at the given position.
+        """
         text_surface = self.font.render(text, False, color)
         self.screen.blit(text_surface, position)
 
     def draw_texts(self):
+        """
+        Draws all text on the visualizer screen.
+        """
         self.render_text(
             self.location_weather_text, (self.sidebar_width + 10, 10)
         )
@@ -249,6 +266,9 @@ class PendulumSystemVisualizer:
         self.sidebar.update(time_delta)
 
     def fill_background(self):
+        """
+        Fills the background with the current background color.
+        """
         self.screen.fill(self.background_color)
 
     def get_background_color(self) -> tuple:
@@ -259,27 +279,32 @@ class PendulumSystemVisualizer:
             return (0, 0, 0)
 
         if Config.temperature <= 0:
-            return (0, 0, 180)  # Cold blue
+            # Cold blue
+            return (0, 0, 180)
         elif 0 < Config.temperature <= 10:
-            return (0, 0, 255 - int(Config.temperature * 5))  # Blue to cyan
+            # Blue to cyan
+            return (0, 0, 255 - int(Config.temperature * 5))
         elif 10 < Config.temperature <= 20:
+            # Cyan to green
             return (
                 0,
                 int((Config.temperature - 10) * 20),
                 200 - int((Config.temperature - 10) * 20),
-            )  # Cyan to green
+            )
         elif 20 < Config.temperature <= 30:
+            # Green to yellow/orange
             return (
                 int((Config.temperature - 20) * 20),
                 200 - int((Config.temperature - 20) * 10),
                 0,
-            )  # Green to yellow/orange
+            )
         else:
+            # Orange to red
             return (
                 200 + min(55, int((Config.temperature - 30) * 5)),
                 50,
                 0,
-            )  # Orange to red
+            )
 
     def handle_event(self, event):
         self.sidebar.process_event(event)
