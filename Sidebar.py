@@ -79,6 +79,16 @@ class Sidebar:
             manager=self.manager,
         )
 
+        self._register_event_handlers()
+
+    def _register_event_handlers(self):
+        event_manager.subscribe(
+            EventType.WEATHER_FETCH_ERROR, self._on_weather_fetch_error
+        )
+
+    def _on_weather_fetch_error(self, event: Event):
+        self.location_entry.set_text("Error fetching data")
+
     def process_event(self, event: pygame.event.Event):
         """
         Processes the given event. Update the config settings based on the

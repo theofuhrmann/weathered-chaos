@@ -27,8 +27,29 @@ class WeatherAPI:
         )
 
     def _on_location_changed(self, event: Event):
-        self.location = Config.location
-        self.fetch_current_weather_data()
+        """
+        Event handler for location change event. Tries to fetch weather data
+        for the new location. If the request fails, reverts to the old location.
+        """
+        new_location = event.data
+        old_location = self.location
+        self.location = new_location
+        weather_data = self.fetch_current_weather_data()
+
+        if not weather_data:
+            event_manager.publish(
+                Event(
+                    EventType.WEATHER_FETCH_ERROR,
+                    {
+                        "error_message": f"Failed to fetch weather for {new_location}",
+                        "location": new_location,
+                    },
+                )
+            )
+            self.location = old_location
+            Config.location = old_location
+
+            return
 
     def fetch_current_weather_data(self) -> dict:
         """Fetch current weather data from API"""
@@ -62,8 +83,6 @@ class WeatherAPI:
 
         except requests.exceptions.RequestException as e:
             print(f"Error fetching weather data: {e}")
-            # Return default values if API call fails
-            self.temperature = 20  # Default to room temperature
-            self.weather_condition = "Clear"
-
+            self.temperature = Config.temperature
+            self.weather_condition = Config.weather_condition
             return {}

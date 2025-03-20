@@ -9,7 +9,6 @@ class EventType(Enum):
 
     LOCATION_CHANGED = auto()
     WEATHER_UPDATED = auto()
-    TEMPERATURE_CHANGED = auto()
     MOON_MODE_CHANGED = auto()
     PENDULUM_COUNT_CHANGED = auto()
     MASS_RANGE_CHANGED = auto()
@@ -17,6 +16,7 @@ class EventType(Enum):
     MUSIC_SETTINGS_CHANGED = auto()
     PYGAME_EVENT = auto()
     VOLUME_CHANGED = auto()
+    WEATHER_FETCH_ERROR = auto()
 
 
 class Event:
