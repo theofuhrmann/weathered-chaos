@@ -150,7 +150,8 @@ class PendulumSystemVisualizer:
 
     def _random_color(self):
         """
-        Generates a random RGB color for each pendulum system."""
+        Generates a random RGB color for each pendulum system.
+        """
         return (
             random.randint(100, 255),
             random.randint(100, 255),

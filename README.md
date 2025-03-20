@@ -58,6 +58,14 @@ Weathered Chaos combines real-time weather data with the unpredictable dynamics 
       ```
     - Replace `your_weatherapi_key` with your actual API key, which you can generate for free by signing up at [weatherapi.com](https://www.weatherapi.com/).
 
+## DAW MIDI Configuration
+
+To route MIDI from `MIDISonifier.py` into your DAW:
+1. Ensure your DAW is set to receive MIDI from virtual ports (e.g., IAC Bus on macOS).
+2. In `MIDISonifier.py`, confirm you’re sending MIDI to the same virtual port.
+3. Verify MIDI preferences in your DAW recognize the virtual port as an input source.
+4. Launch the application, and your DAW should receive MIDI events in real time.
+
 ## Usage
 
 Run the application:
