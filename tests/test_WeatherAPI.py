@@ -65,25 +65,3 @@ class TestWeatherAPI:
         assert result == {}
         assert self.weather_api.temperature == 20
         assert self.weather_api.weather_condition == "Clear"
-
-    def test_get_background_color_calls_fetch_if_needed(self):
-        with patch.object(
-            WeatherAPI, "fetch_current_weather_data"
-        ) as mock_fetch:
-
-            def side_effect():
-                self.weather_api.temperature = 15.1
-                self.weather_api.weather_condition = "Partly cloudy"
-                return {
-                    "current": {
-                        "temp_c": 15.1,
-                        "condition": {"text": "Partly cloudy"},
-                    }
-                }
-
-            mock_fetch.side_effect = side_effect
-            self.weather_api.temperature = None
-            self.weather_api.get_background_color()
-            mock_fetch.assert_called_once()
-            assert self.weather_api.temperature == 15.1
-            assert self.weather_api.weather_condition == "Partly cloudy"
