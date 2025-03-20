@@ -8,5 +8,5 @@ class Config:
     weather_condition = "Clear"
     rave_volume = 0.5
     key = "C"
-    scale = "major"
-    mode = "ionian"
+    scale = "MAJOR"
+    mode = "IONIAN"
