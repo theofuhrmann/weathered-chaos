@@ -3,6 +3,7 @@ from unittest.mock import MagicMock, patch
 
 import requests
 
+from Config import Config
 from WeatherAPI import WeatherAPI
 
 
@@ -46,8 +47,8 @@ class TestWeatherAPI:
 
         # Assertions
         assert result == {}
-        assert self.weather_api.temperature == 20
-        assert self.weather_api.weather_condition == "Clear"
+        assert self.weather_api.temperature == Config.temperature
+        assert self.weather_api.weather_condition == Config.weather_condition
 
     @patch("requests.get")
     def test_fetch_weather_data_http_error(self, mock_get):
@@ -63,5 +64,5 @@ class TestWeatherAPI:
 
         # Assertions
         assert result == {}
-        assert self.weather_api.temperature == 20
-        assert self.weather_api.weather_condition == "Clear"
+        assert self.weather_api.temperature == Config.temperature
+        assert self.weather_api.weather_condition == Config.weather_condition
