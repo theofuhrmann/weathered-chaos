@@ -3,8 +3,8 @@ from unittest.mock import Mock, patch
 import pygame
 import pytest
 
-from Pendulum import DoublePendulum, Node, Pendulum, PendulumSystem
-from PendulumVisualizer import PendulumSystemVisualizer
+from PendulumSystem import DoublePendulum, Node, Pendulum, PendulumSystem
+from Visualizer import PendulumSystemVisualizer
 
 
 class TestUpdateNodeStates:
@@ -33,10 +33,10 @@ class TestUpdateNodeStates:
 
         screen_size = (800, 800)
         visualizer = PendulumSystemVisualizer(
-            pendulum_system=pendulum_system, screen_size=screen_size, scale=200
+            pendulum_system=pendulum_system, size=screen_size, scale=200
         )
 
-        origin_x = screen_size[0] // 2
+        origin_x = screen_size[0] // 2 + visualizer.sidebar_width
 
         yield {
             "visualizer": visualizer,
