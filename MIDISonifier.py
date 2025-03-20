@@ -91,9 +91,9 @@ class MIDISonifier:
 
     def __init__(
         self,
-        key: Key = Key.C,
-        scale: Scale = Scale.MAJOR,
-        mode: Mode = Mode.IONIAN,
+        key: Key = None,
+        scale: Scale = None,
+        mode: Mode = None,
         scale_factor=200,
         midi_port_name: str = MIDI_PORT,
     ):
@@ -108,13 +108,15 @@ class MIDISonifier:
             scale_factor: Scale factor for visualizing the pendulum system
             midi_port_name: Name of the MIDI output port
         """
-        self.key: Key = key
-        self.scale: Scale = scale
-        self.mode: Mode = mode
+        self.key = key or Key[Config.key]
+        self.scale = scale or Scale[Config.scale]
+        self.mode = mode or Mode[Config.mode]
 
-        Config.key = key.value
-        Config.scale = scale.value
-        Config.mode = mode.value
+        Config.key, Config.scale, Config.mode = (
+            self.key.value,
+            self.scale.value,
+            self.mode.value,
+        )
 
         self.scale_factor: int = scale_factor
         self.midi_out = mido.open_output(midi_port_name)
