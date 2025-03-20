@@ -1,6 +1,8 @@
 import math
 import random
 
+from Config import Config
+
 
 class Node:
     """
@@ -90,15 +92,25 @@ class DoublePendulum:
     ) -> float:
         """
         Calculates the temperature factor based on the provided temperature in Celsius.
-        Factor ranges from 0.5 (cold) to 2.0 (hot).
+        Factor ranges from 0.25 (cold) to 2.0 (hot).
         """
-        if temperature_celsius <= 0:
-            return 0.5
-        elif temperature_celsius >= 35:
-            return 2.0
+        if Config.moon_mode:
+            return 1.0
+
+        min_temperature_factor = 0.25
+        max_temperature_factor = 2.0
+        min_temperature = 0
+        max_temperature = 35
+
+        if temperature_celsius <= min_temperature:
+            return min_temperature_factor
+        elif temperature_celsius >= max_temperature:
+            return max_temperature_factor
         else:
-            # Linear interpolation between 0°C (0.5) and 35°C (2.0)
-            return 0.5 + (temperature_celsius / 35) * 1.5
+            # Linear interpolation between 0°C (0.25) and 35°C (2.0)
+            return min_temperature_factor + (
+                temperature_celsius / max_temperature
+            ) * (max_temperature_factor - min_temperature_factor)
 
     def step(self, dt) -> None:
         """
@@ -257,3 +269,12 @@ class PendulumSystem:
                 )
 
         self.length_range = length_range
+
+    def update_temperature_factor(self, temperature: float) -> None:
+        """
+        Updates the temperature_factor of the double pendulums.
+        """
+        for double_pendulum in self.double_pendulums:
+            double_pendulum.temperature_factor = (
+                double_pendulum.calculate_temperature_factor(temperature)
+            )

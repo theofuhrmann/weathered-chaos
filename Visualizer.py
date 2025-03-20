@@ -56,10 +56,9 @@ class PendulumSystemVisualizer:
         self._register_event_handlers()
 
     def _register_event_handlers(self):
-        """Register all event handlers for this class"""
-        event_manager.subscribe(
-            EventType.LOCATION_CHANGED, self._on_location_changed
-        )
+        """
+        Registers all event handlers for this class
+        """
         event_manager.subscribe(
             EventType.WEATHER_UPDATED, self._on_weather_updated
         )
@@ -79,17 +78,22 @@ class PendulumSystemVisualizer:
             EventType.MUSIC_SETTINGS_CHANGED, self._on_music_settings_changed
         )
 
-    def _on_location_changed(self, event: Event):
-        """Handle the LOCATION_CHANGED event"""
-        self.update_location_weather_text()
-
     def _on_weather_updated(self, event: Event):
-        """Handle weather update events"""
+        """
+        Handles weather update events. Updates the location and weather text,
+        background color, and temperature factor.
+        """
         self.update_location_weather_text()
         self.background_color = self.get_background_color()
+        self.pendulum_system.update_temperature_factor(
+            event.data["temperature"]
+        )
 
     def _on_moon_mode_changed(self, event: Event):
-        """Handle moon mode change events"""
+        """
+        Handles moon mode change events. Updates the gravity, background color,
+        and location and weather text
+        """
         moon_mode = event.data
         new_gravity = 1.62 if moon_mode else 9.81
         self.pendulum_system.update_gravity(new_gravity)
@@ -98,7 +102,9 @@ class PendulumSystemVisualizer:
         self.update_location_weather_text()
 
     def _on_pendulum_count_changed(self, event: Event):
-        """Handle pendulum count change events"""
+        """
+        Handles pendulum count change events. Updates the number of pendulums.
+        """
         current_n_pendulums = event.data
         self.pendulum_system.update_number_of_pendulums(current_n_pendulums)
         self.num_pendulums = current_n_pendulums
@@ -109,19 +115,30 @@ class PendulumSystemVisualizer:
             ]
 
     def _on_mass_range_changed(self, event: Event):
-        """Handle mass range change events"""
+        """
+        Handles mass range change events. Updates the mass range for all
+        pendulums in the system.
+        """
         self.pendulum_system.update_mass_range(event.data)
 
     def _on_length_range_changed(self, event: Event):
-        """Handle length range change events"""
+        """
+        Handles length range change events. Updates the length range for all
+        pendulums in the system.
+        """
         self.pendulum_system.update_length_range(event.data)
 
     def _on_music_settings_changed(self, event: Event):
-        """Handle music settings change events"""
+        """
+        Handle music settings change events. Updates the music text.
+        """
         self.update_music_text()
 
     def process_pygame_events(self, events):
-        """Process all pygame events and publish them to the event system"""
+        """
+        Processes all pygame events and publish them to the event system
+        for other components to handle.
+        """
         for event in events:
             if event.type == pygame.QUIT:
                 return False
@@ -132,7 +149,8 @@ class PendulumSystemVisualizer:
         return True
 
     def _random_color(self):
-        """Generates a random RGB color for each pendulum system."""
+        """
+        Generates a random RGB color for each pendulum system."""
         return (
             random.randint(100, 255),
             random.randint(100, 255),
