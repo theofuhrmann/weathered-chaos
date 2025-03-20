@@ -44,7 +44,7 @@ class Key(Enum):
 MIDI_PORT = "IAC Driver Bus 1"
 
 
-class PendulumSonifier:
+class MIDISonifier:
     """
     Maps the motion of a pendulum system to MIDI musical output, generating
     notes based on pendulum activity and weather conditions. Supports dynamic
@@ -98,7 +98,7 @@ class PendulumSonifier:
         midi_port_name: str = MIDI_PORT,
     ):
         """
-        Initialize the PendulumSonifier with the specified key, scale, mode,
+        Initialize the MIDISonifier with the specified key, scale, mode,
         and MIDI port name.
 
         Args:

@@ -5,9 +5,9 @@ import pygame
 from dotenv import load_dotenv
 
 from Config import Config
+from MIDISonifier import MIDISonifier
 from PendulumSystem import PendulumSystem
 from RAVESonifier import RAVESonifier
-from Sonifier import PendulumSonifier
 from Visualizer import PendulumSystemVisualizer
 from WeatherAPI import WeatherAPI
 
@@ -31,7 +31,7 @@ if __name__ == "__main__":
 
     visualizer = PendulumSystemVisualizer(pendulum_system, size=(800, 800))
 
-    sonifier = PendulumSonifier(
+    sonifier = MIDISonifier(
         scale_factor=visualizer.scale,
     )
 
