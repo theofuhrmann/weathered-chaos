@@ -1,13 +1,134 @@
+import math
 from unittest.mock import Mock, patch
 
 import pygame
 import pytest
 
+from EventManager import Event, EventType
 from PendulumSystem import DoublePendulum, Node, Pendulum, PendulumSystem
 from Visualizer import PendulumSystemVisualizer
 
 
-class TestUpdateNodeStates:
+@pytest.fixture
+def visualizer():
+    with patch("pygame.init"), patch("pygame.display.set_mode"), patch(
+        "pygame.font.init"
+    ), patch("pygame.font.SysFont"), patch(
+        "Visualizer.Sidebar"
+    ) as mock_sidebar:
+        mock_pendulum_system = Mock(spec=PendulumSystem)
+        mock_pendulum_system.double_pendulums = [
+            Mock(spec=DoublePendulum) for _ in range(2)
+        ]
+        sidebar_instance = Mock()
+        mock_sidebar.return_value = sidebar_instance
+        return PendulumSystemVisualizer(mock_pendulum_system, (800, 800), 150)
+
+
+class TestVisualizerInitialization:
+    def test_initialization(self, visualizer):
+        assert visualizer.num_pendulums == 2
+        assert visualizer.sidebar_width == 250
+        assert visualizer.size == (800 + 250, 800)
+        assert visualizer.scale == 150
+        assert visualizer.node_threshold == 5
+        assert len(visualizer.pendulum_colors) == 2
+
+
+class TestEventHandling:
+    def test_event_handlers_registration(self, visualizer):
+        test_event_manager = Mock()
+        with patch("Visualizer.event_manager", test_event_manager):
+            visualizer._register_event_handlers()
+        assert test_event_manager.subscribe.call_count == 6
+        subscribed_events = [
+            call[0][0] for call in test_event_manager.subscribe.call_args_list
+        ]
+        expected_events = [
+            EventType.WEATHER_UPDATED,
+            EventType.MOON_MODE_CHANGED,
+            EventType.PENDULUM_COUNT_CHANGED,
+            EventType.MASS_RANGE_CHANGED,
+            EventType.LENGTH_RANGE_CHANGED,
+            EventType.MUSIC_SETTINGS_CHANGED,
+        ]
+        assert all(event in subscribed_events for event in expected_events)
+
+    def test_weather_updated_event_handler(self, visualizer):
+        visualizer.update_location_weather_text = Mock()
+        visualizer.get_background_color = Mock(return_value=(0, 0, 0))
+        visualizer.pendulum_system.update_temperature_factor = Mock()
+        event = Event(EventType.WEATHER_UPDATED, {"temperature": 25})
+        visualizer._on_weather_updated(event)
+        visualizer.update_location_weather_text.assert_called_once()
+        visualizer.get_background_color.assert_called_once()
+        visualizer.pendulum_system.update_temperature_factor.assert_called_once_with(
+            25
+        )
+
+    def test_moon_mode_changed_event_handler(self, visualizer):
+        visualizer.update_gravity_text = Mock()
+        visualizer.update_location_weather_text = Mock()
+        visualizer.pendulum_system.update_gravity = Mock()
+        visualizer.get_background_color = Mock(return_value=(0, 0, 0))
+        event = Event(EventType.MOON_MODE_CHANGED, True)
+        visualizer._on_moon_mode_changed(event)
+        visualizer.pendulum_system.update_gravity.assert_called_once_with(1.62)
+
+    def test_process_pygame_events(self, visualizer):
+        with patch("Visualizer.event_manager") as mock_event_manager:
+            event1 = Mock(type=pygame.MOUSEMOTION)
+            event2 = Mock(type=pygame.KEYDOWN)
+            quit_event = Mock(type=pygame.QUIT)
+            assert visualizer.process_pygame_events([event1, event2]) is True
+            assert mock_event_manager.publish.call_count == 2
+            assert visualizer.process_pygame_events([quit_event]) is False
+
+
+class TestRendering:
+    def test_convert_to_screen_coords(self, visualizer):
+        mock_dp = Mock(spec=DoublePendulum)
+        p1 = Mock(spec=Pendulum, angle=math.pi / 4, length=1.0)
+        p2 = Mock(spec=Pendulum, angle=math.pi / 2, length=1.0)
+        mock_dp.pendulums = [p1, p2]
+        visualizer.origin = (400, 300)
+        visualizer.scale = 100
+        coords = visualizer._convert_to_screen_coords(mock_dp)
+        assert coords[0] == (400, 300)
+        assert math.isclose(
+            coords[1][0], 400 + 100 * math.sin(math.pi / 4), abs_tol=1
+        )
+        assert math.isclose(
+            coords[2][0], coords[1][0] + 100 * math.sin(math.pi / 2), abs_tol=1
+        )
+
+    def test_draw_double_pendulum(self, visualizer):
+        with patch("pygame.draw.line") as mock_line, patch(
+            "pygame.draw.circle"
+        ) as mock_circle:
+            mock_dp = Mock(spec=DoublePendulum)
+            p1, p2 = Mock(spec=Pendulum, mass=2.0), Mock(
+                spec=Pendulum, mass=1.0
+            )
+            mock_dp.pendulums = [p1, p2]
+            visualizer._convert_to_screen_coords = Mock(
+                return_value=[(400, 300), (450, 350), (500, 400)]
+            )
+            visualizer._draw_double_pendulum(mock_dp, (255, 0, 0))
+            assert mock_line.call_count == 2
+            assert mock_circle.call_count == 2
+            assert mock_circle.call_args_list[0][0][2] == (450, 350)
+
+    def test_get_background_color(self, visualizer):
+        with patch("Visualizer.Config") as mock_config:
+            mock_config.moon_mode = True
+            assert visualizer.get_background_color() == (0, 0, 0)
+            mock_config.moon_mode = False
+            mock_config.temperature = -10
+            assert visualizer.get_background_color() == (0, 0, 180)
+
+
+class TestNodeStates:
     @pytest.fixture
     def setup(self):
         pygame.init()

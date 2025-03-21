@@ -3,6 +3,8 @@ import random
 
 from Config import Config
 
+MAX_ANGULAR_VELOCITY = 10.0
+
 
 class Node:
     """
@@ -116,6 +118,8 @@ class DoublePendulum:
         """
         Computes one simulation step for a double pendulum using Euler integration.
         """
+        DAMPING_FACTOR = 0.90  # Reduce angular velocity by 10% on a full spin
+
         p1: Pendulum = self.pendulums[0]
         p2: Pendulum = self.pendulums[1]
         m1, m2 = p1.mass, p2.mass
@@ -161,8 +165,26 @@ class DoublePendulum:
         p1.angular_velocity += d_w1 * dt
         p2.angular_velocity += d_w2 * dt
 
+        # Clamp angular velocity to prevent excessive spinning
+        p1.angular_velocity = max(
+            -MAX_ANGULAR_VELOCITY,
+            min(p1.angular_velocity, MAX_ANGULAR_VELOCITY),
+        )
+        p2.angular_velocity = max(
+            -MAX_ANGULAR_VELOCITY,
+            min(p2.angular_velocity, MAX_ANGULAR_VELOCITY),
+        )
+
         p1.angle += p1.angular_velocity * dt
         p2.angle += p2.angular_velocity * dt
+
+        # Detect full spins for the first pendulum
+        if abs(p1.angle) >= 2 * math.pi:
+            # Reduce angular velocity by the damping factor
+            p1.angular_velocity *= DAMPING_FACTOR
+
+            # Normalize the angle to keep it within [-2π, 2π]
+            p1.angle %= 2 * math.pi
 
 
 class PendulumSystem:
@@ -272,9 +294,27 @@ class PendulumSystem:
 
     def update_temperature_factor(self, temperature: float) -> None:
         """
-        Updates the temperature_factor of the double pendulums.
+        Updates the temperature_factor of the double pendulums and scales angular velocity.
         """
+
         for double_pendulum in self.double_pendulums:
-            double_pendulum.temperature_factor = (
+            # Calculate the new temperature factor
+            new_temperature_factor = (
                 double_pendulum.calculate_temperature_factor(temperature)
             )
+
+            # Scale angular velocity based on the ratio of the new and old temperature factors
+            factor_ratio = (
+                new_temperature_factor / double_pendulum.temperature_factor
+            )
+            for pendulum in double_pendulum.pendulums:
+                pendulum.angular_velocity *= factor_ratio
+
+                # Clamp the angular velocity to prevent excessive spinning
+                pendulum.angular_velocity = max(
+                    -MAX_ANGULAR_VELOCITY,
+                    min(pendulum.angular_velocity, MAX_ANGULAR_VELOCITY),
+                )
+
+            # Update the temperature factor
+            double_pendulum.temperature_factor = new_temperature_factor

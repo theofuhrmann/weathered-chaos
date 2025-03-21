@@ -63,6 +63,13 @@ class WeatherAPI:
             response = requests.get(url, params=params)
             response.raise_for_status()
             data = response.json()
+            if (
+                "temp_c" not in data["current"]
+                or "condition" not in data["current"]
+                or "text" not in data["current"]["condition"]
+            ):
+                raise ValueError("Incomplete current weather data found")
+
             self.temperature = data["current"]["temp_c"]
             self.weather_condition = data["current"]["condition"]["text"]
 
@@ -81,7 +88,7 @@ class WeatherAPI:
 
             return data
 
-        except requests.exceptions.RequestException as e:
+        except (ValueError, requests.exceptions.RequestException) as e:
             print(f"Error fetching weather data: {e}")
             self.temperature = Config.temperature
             self.weather_condition = Config.weather_condition

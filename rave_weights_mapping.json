@@ -5,14 +5,14 @@
     },
     "rave_model_weights/water.ts": {
         "latent_dim": 16,
-        "volume": 2.0
+        "volume": 1.5
     },
     "rave_model_weights/moon.ts": {
         "latent_dim": 8,
-        "volume": 0.5
+        "volume": 0.25
     },
     "rave_model_weights/percussion.ts": {
         "latent_dim": 8,
-        "volume": 1.0
+        "volume": 0.25
     }
 }

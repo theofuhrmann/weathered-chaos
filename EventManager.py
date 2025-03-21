@@ -15,7 +15,6 @@ class EventType(Enum):
     LENGTH_RANGE_CHANGED = auto()
     MUSIC_SETTINGS_CHANGED = auto()
     PYGAME_EVENT = auto()
-    VOLUME_CHANGED = auto()
     WEATHER_FETCH_ERROR = auto()
 
 

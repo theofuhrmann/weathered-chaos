@@ -53,6 +53,10 @@ class PendulumSystemVisualizer:
         self.clock = pygame.time.Clock()
         self.node_threshold = 5
 
+        self.location_weather_text = ""
+        self.gravity_text = ""
+        self.music_text = ""
+
         self._register_event_handlers()
 
     def _register_event_handlers(self):
