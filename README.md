@@ -8,6 +8,10 @@ A Python application that generates music based on current weather conditions an
 
 Weathered Chaos combines real-time weather data with the unpredictable dynamics of double pendulums to create unique, ever-changing musical compositions. The project uses neural audio synthesis techniques to transform these inputs into soundscapes that reflect both environmental conditions and chaotic mathematical patterns.
 
+## Demo
+
+Here's the link of a demo of the program: [Watch the Demo](https://www.youtube.com/watch?v=SVjPm2dIonA)
+
 ## Features
 
 - **Weather Integration**: Fetches real-time weather data using the integrated WeatherAPI.py
