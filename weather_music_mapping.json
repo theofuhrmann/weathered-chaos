@@ -35,6 +35,12 @@
         "mode": "PHRYGIAN",
         "weights": "rave_model_weights/dawn_birds.ts"
     },
+    "Patchy rain nearby": {
+        "key": "E",
+        "scale": "MINOR",
+        "mode": "DORIAN",
+        "weights": "rave_model_weights/water.ts"
+    },
     "Patchy rain possible": {
         "key": "E",
         "scale": "MINOR",
