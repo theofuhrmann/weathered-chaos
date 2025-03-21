@@ -176,7 +176,10 @@ class PendulumSystemVisualizer:
 
     def _update_node_states(self, double_pendulum: DoublePendulum):
         """
-        Updates the state of each node in the double pendulum.
+        Updates the state of each node in the double pendulum. If a node
+        crosses the origin, it becomes active and triggers the node. If
+        the node moves far enough away from the origin, the node is no longer
+        triggered.
         """
         origin_x, _ = self.origin
         coords = self._convert_to_screen_coords(double_pendulum)
@@ -204,7 +207,8 @@ class PendulumSystemVisualizer:
 
     def _draw_double_pendulum(self, double_pendulum: DoublePendulum, color):
         """
-        Draws a double pendulum.
+        Draws a double pendulum. The nodes are drawn as circles and the
+        pendulum links are drawn as lines.
         """
         coords = self._convert_to_screen_coords(double_pendulum)
         for i, (start, end) in enumerate(zip(coords, coords[1:])):
@@ -228,6 +232,9 @@ class PendulumSystemVisualizer:
             self.location_weather_text = f"{Config.location}: {Config.weather_condition}, {Config.temperature}°C"
 
     def update_gravity_text(self):
+        """
+        Updates the gravity text to display the current gravity.
+        """
         self.gravity_text = (
             f"Gravity: {1.62 if Config.moon_mode else 9.81} m/s²"
         )
@@ -296,7 +303,8 @@ class PendulumSystemVisualizer:
 
     def get_background_color(self) -> tuple:
         """
-        Map temperature to background color.
+        Map temperature to background color. The color changes from blue to
+        green to yellow to red as the temperature increases.
         """
         if Config.moon_mode:
             return (0, 0, 0)
@@ -330,4 +338,7 @@ class PendulumSystemVisualizer:
             )
 
     def handle_event(self, event):
+        """
+        Handles pygame events. The sidebar processes the events.
+        """
         self.sidebar.process_event(event)
